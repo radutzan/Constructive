@@ -12,14 +12,11 @@ class FirstViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        UIView.animate(withDuration: 0.28 * AnimationDuration.speedMultiplier, delay: 0.32 * AnimationDuration.speedMultiplier, options: [], animations: {
+            
+        }, completion: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 
