@@ -54,3 +54,18 @@ extension UIFont {
                                  weight: TypeStyle.subtitle.weight)
     }
 }
+
+func attributedString(from string: String, style: TypeStyle) -> NSAttributedString {
+    var string = string
+    switch style.textTransform {
+    case .some(.lowercase):
+        string = string.lowercased()
+    case .some(.uppercase):
+        string = string.uppercased()
+    default:
+        break
+    }
+    
+    let attributedString = NSMutableAttributedString(string: string, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: style.size, weight: style.weight), NSKernAttributeName: style.letterSpacing ?? 0])
+    return attributedString
+}

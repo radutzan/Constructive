@@ -20,6 +20,37 @@ struct Theme {
     }
     static let themeChangedNotificationName = Notification.Name(rawValue: "Theme changed")
     
+    // MARK: - Active theme
+    static var active: Theme = BuiltIn.standard {
+        didSet {
+            guard oldValue.style != active.style else { return }
+            
+            UserDefaults.standard.set(active.style == .dark, forKey: Keys.darkTheme)
+            
+            let notification = Notification(name: Theme.themeChangedNotificationName, object: nil)
+            NotificationQueue.default.enqueue(notification, postingStyle: .asap, coalesceMask: .onName, forModes: nil)
+        }
+    }
+    
+    // MARK: - Built-in themes
+    struct BuiltIn {
+        static var standard: Theme {
+            return Theme()
+        }
+        static var dark: Theme {
+            var darkTheme = Theme()
+            darkTheme.style = .dark
+            darkTheme.colors.primary = UIColor.black
+            darkTheme.colors.contrast = UIColor.white
+            darkTheme.colors.tableViewSeparator = UIColor(white: 1, alpha: 0.08)
+            darkTheme.colors.contentBackground = UIColor(white: 0.06, alpha: 1)
+            darkTheme.colors.text.primary = UIColor(white: 1, alpha: 0.88)
+            darkTheme.colors.text.secondary = UIColor(white: 1, alpha: 0.4)
+            darkTheme.colors.text.sectionHeader = UIColor(white: 1, alpha: 0.6)
+            return darkTheme
+        }
+    }
+    
     // MARK: - Dark or light style
     enum Style {
         case light, dark
@@ -81,35 +112,4 @@ struct Theme {
         }
     }
     var colors = Color()
-    
-    // MARK: - Active theme
-    static var active: Theme = BuiltIn.standard {
-        didSet {
-            guard oldValue.style != active.style else { return }
-            
-            UserDefaults.standard.set(active.style == .dark, forKey: Keys.darkTheme)
-            
-            let notification = Notification(name: Theme.themeChangedNotificationName, object: nil)
-            NotificationQueue.default.enqueue(notification, postingStyle: .asap, coalesceMask: .onName, forModes: nil)
-        }
-    }
-    
-    // MARK: - Built-in themes
-    struct BuiltIn {
-        static var standard: Theme {
-            return Theme()   
-        }
-        static var dark: Theme {
-            var darkTheme = Theme()
-            darkTheme.style = .dark
-            darkTheme.colors.primary = UIColor.black
-            darkTheme.colors.contrast = UIColor.white
-            darkTheme.colors.tableViewSeparator = UIColor(white: 1, alpha: 0.08)
-            darkTheme.colors.contentBackground = UIColor(white: 0.06, alpha: 1)
-            darkTheme.colors.text.primary = UIColor(white: 1, alpha: 0.88)
-            darkTheme.colors.text.secondary = UIColor(white: 1, alpha: 0.4)
-            darkTheme.colors.text.sectionHeader = UIColor(white: 1, alpha: 0.6)
-            return darkTheme
-        }
-    }
 }
