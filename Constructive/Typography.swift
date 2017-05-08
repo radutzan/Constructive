@@ -55,7 +55,7 @@ extension UIFont {
     }
 }
 
-func attributedString(from string: String, style: TypeStyle) -> NSAttributedString {
+func attributedString(from string: String, style: TypeStyle) -> NSMutableAttributedString {
     var string = string
     switch style.textTransform {
     case .some(.lowercase):
