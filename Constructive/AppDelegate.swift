@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        // Register for theme change notifications
         NotificationCenter.default.addObserver(self,
            selector: #selector(themeChangedNotification),
            name: Theme.themeChangedNotificationName,
@@ -28,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.statusBarStyle = Theme.active.statusBarStyle
         
         guard let rootVC = window?.rootViewController else { return }
+        // These methods recursively call themeDidChange() on all views and view controllers that conform to Themable
         updateTheme(controller: rootVC)
         updateTheme(view: rootVC.view)
     }

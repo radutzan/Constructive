@@ -12,6 +12,7 @@ struct TypeStyle {
     enum TextTransform {
         case none, lowercase, uppercase
     }
+    
     var size: CGFloat
     var weight: CGFloat
     var letterSpacing: CGFloat?
@@ -24,38 +25,30 @@ struct TypeStyle {
         self.textTransform = textTransform
     }
     
-    static let display = TypeStyle(size: 18, weight: UIFontWeightLight)
-    static let sectionHeader = TypeStyle(size: 13, weight: UIFontWeightSemibold, letterSpacing: 2, textTransform: .uppercase)   
-    static let titleCompact = TypeStyle(size: 13, weight: UIFontWeightMedium)
-    static let titleMedium = TypeStyle(size: 14, weight: UIFontWeightMedium)
-    static let titleLarge = TypeStyle(size: 15, weight: UIFontWeightMedium)
-    static let subtitle = TypeStyle(size: 11, weight: UIFontWeightSemibold)
-}
-
-extension UIFont {
-    static var display: UIFont {
-        return UIFont.systemFont(ofSize: TypeStyle.display.size,
-                                 weight: TypeStyle.display.weight)
+    static var sizeMultiplier: CGFloat {
+        let normalBodySize: CGFloat = 17
+        let currentBodySize = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).pointSize
+        let multiplier = currentBodySize / normalBodySize
+        return multiplier
     }
-    static var titleCompact: UIFont {
-        return UIFont.systemFont(ofSize: TypeStyle.titleCompact.size,
-                                 weight: TypeStyle.titleCompact.weight)
+    
+    static func proportionalTypeSize(for originalSize: CGFloat) -> CGFloat {
+        let result = round(originalSize * sizeMultiplier)
+        return result
     }
-    static var titleMedium: UIFont {
-        return UIFont.systemFont(ofSize: TypeStyle.titleMedium.size,
-                                 weight: TypeStyle.titleMedium.weight)
+    
+    static func proportionalContainerSize(for originalSize: CGFloat) -> CGFloat {
+        let multiplier = max(sizeMultiplier, 1)
+        let result = round(originalSize * multiplier)
+        return result
     }
-    static var titleLarge: UIFont {
-        return UIFont.systemFont(ofSize: TypeStyle.titleLarge.size,
-                                 weight: TypeStyle.titleLarge.weight)
-    }
-    static var subtitle: UIFont {
-        return UIFont.systemFont(ofSize: TypeStyle.subtitle.size,
-                                 weight: TypeStyle.subtitle.weight)
+    
+    func fontObject() -> UIFont {
+        return UIFont.systemFont(ofSize: size, weight: weight)
     }
 }
 
-func attributedString(from string: String, style: TypeStyle) -> NSMutableAttributedString {
+func attributedString(from string: String, style: TypeStyle, textColor: UIColor? = nil) -> NSMutableAttributedString {
     var string = string
     switch style.textTransform {
     case .some(.lowercase):
@@ -66,6 +59,33 @@ func attributedString(from string: String, style: TypeStyle) -> NSMutableAttribu
         break
     }
     
-    let attributedString = NSMutableAttributedString(string: string, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: style.size, weight: style.weight), NSKernAttributeName: style.letterSpacing ?? 0])
+    let attributedString = NSMutableAttributedString(string: string, attributes: [
+        NSFontAttributeName: UIFont.systemFont(ofSize: style.size, weight: style.weight),
+        NSKernAttributeName: style.letterSpacing ?? 0])
+    
+    if let color = textColor {
+        attributedString.addAttributes([
+            NSForegroundColorAttributeName: color],
+                                       range: NSMakeRange(0, string.characters.count))
+    }
+    
     return attributedString
+}
+
+// Sample TypeStyle definitions
+extension TypeStyle {
+    static let display = TypeStyle(size: 18, weight: UIFontWeightLight)
+    static let sectionHeader = TypeStyle(size: 13, weight: UIFontWeightSemibold, letterSpacing: 2, textTransform: .uppercase)
+    static let titleCompact = TypeStyle(size: 13, weight: UIFontWeightMedium)
+    static let titleMedium = TypeStyle(size: 14, weight: UIFontWeightMedium)
+    static let titleLarge = TypeStyle(size: 15, weight: UIFontWeightMedium)
+    static let subtitle = TypeStyle(size: 11, weight: UIFontWeightSemibold)
+}
+
+extension UIFont {
+    static var display: UIFont { return TypeStyle.display.fontObject() }
+    static var titleCompact: UIFont { return TypeStyle.titleCompact.fontObject() }
+    static var titleMedium: UIFont { return TypeStyle.titleMedium.fontObject() }
+    static var titleLarge: UIFont { return TypeStyle.titleLarge.fontObject() }
+    static var subtitle: UIFont { return TypeStyle.subtitle.fontObject() }
 }

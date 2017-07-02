@@ -64,11 +64,11 @@
 		7C989BF61EBB9B4500435A0D /* Constructive */ = {
 			isa = PBXGroup;
 			children = (
-				7C989BF71EBB9B4500435A0D /* AppDelegate.swift */,
 				7C989C0B1EBB9B5300435A0D /* Constants.swift */,
 				7C989C0D1EBBA0E900435A0D /* Typography.swift */,
 				7C989C0F1EBBA9B900435A0D /* AnimationDuration.swift */,
 				7C989C111EBBB02400435A0D /* Theme.swift */,
+				7C989BF71EBB9B4500435A0D /* AppDelegate.swift */,
 				7C989BF91EBB9B4500435A0D /* FirstViewController.swift */,
 				7C989BFB1EBB9B4500435A0D /* SecondViewController.swift */,
 				7C989BFD1EBB9B4500435A0D /* Main.storyboard */,
